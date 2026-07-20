@@ -25,15 +25,21 @@ def add_message(message):
     message_box.insert(tk.END, message+'\n')
     message_box.config(state=tk.DISABLED)
 
-def connect(client):
+def connect():
+    username = username_textbox.get()
+    if username == '':
+        messagebox.showerror('Error', 'Username cannot be empty')
+        return
     try:
         client.connect((HOST,PORT))
+        client.sendall(username.encode())
         print('Successfully connected')
         add_message('[SERVER] Successfully connected to server')
-    except:
-        messagebox.showerror('Unable to connect to server')
+        threading.Thread(target=listen_for_messages_server, args=(client,), daemon=True).start()
+    except Exception as e:
+        messagebox.showerror('Error', f'Unable to connect to server: {e}')
 
-def send_message(client):
+def send_message():
     message= message_textbox.get()
     if message !='':
         client.sendall(message.encode())
@@ -70,7 +76,7 @@ username_button = tk.Button(top_frame, text='Join:', font=BUTTON_FONT, bg=OCEAN_
 username_button.pack(side=tk.LEFT, padx=15)
 
 message_textbox = tk.Entry(bottom_frame, font=FONT, bg=MEDIUM_GREY, fg=WHITE, width=38)
-message_textbox.pack(side=tk.Left, padx=10)
+message_textbox.pack(side=tk.LEFT, padx=10)
 
 message_button = tk.Button(bottom_frame, text='Send', font=BUTTON_FONT, bg=OCEAN_BLUE, fg=WHITE, command=send_message)
 message_button.pack(side=tk.LEFT, padx=10)

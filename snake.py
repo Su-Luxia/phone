@@ -69,8 +69,8 @@ def move():
             return
     if (snake.x == food.x and snake.y==food.y):
         snake_body.append(Tile(food.x,food.y))
-        food.x = random.randInt(0,COLS-1)*TILE_SIZE
-        food.y = random.randInt(0,ROWS-1)*TILE_SIZE
+        food.x = random.randint(0,COLS-1)*TILE_SIZE
+        food.y = random.randint(0,ROWS-1)*TILE_SIZE
         score += 1
     for i in range(len(snake_body)-1, -1, -1):
         tile = snake_body[i]

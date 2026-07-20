@@ -63,7 +63,7 @@ def button_clicked(value):
     if value in right_symbols:
         if value == '=':
             if A is not None and operator is not None:
-                B=label('text')
+                B=label['text']
                 numA=float(A)
                 numB=float(B)
 
@@ -74,7 +74,10 @@ def button_clicked(value):
                 elif operator == 'x':
                     label['text']= remove_zero_decimal(numA*numB) 
                 elif operator == '÷':
-                    label['text']= remove_zero_decimal(numA/numB)
+                    if numB == 0:
+                        label['text'] = 'Error'
+                    else: 
+                        label['text']= remove_zero_decimal(numA/numB)
 
                 clear_all()
         elif value in '+-x÷':
