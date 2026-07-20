@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Chatroom</title>
+        <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <style>
+            body{
+                font-family: Arial, Helvetica, sans-serif;
+                background-color: rgb(54,54,54);
+                color:white;
+            }
+            #chat{
+                list-style-type: none;
+                padding: 0;
+            }
+            #chat li{
+                padding: 8px;
+                margin-bottom: 10px;
+                background-color: #333333;
+                border-radius: 4px;
+            }
+            #message-box{
+                margin-top: 20px;
+                display: inline-block;
+                padding: 5px;
+            }
+            input, button{
+                padding: 10px;
+                border: none;
+                border-radius: 4px;
+                margin-right: 5px;
+            }
+            input{
+                background-color: #444444;
+                color: #ffffff;
+            }
+            button{
+                background-color: #3cf783;
+                color: #ffffff;
+            }
+            #color-picker{
+                width: 20px;
+                height: 20px;
+                outline-style: solid;
+                outline-color: white;
+                outline-width: 2px;
+                margin-left: 0px;
+                padding: 0;
+            }
+            .title-box{
+                position: relative;
+                padding: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="title-box">
+            <h1>Chatroom</h1>
+            <h6>Secret</h6>
+        </div>
+        <ul id="chat"></ul>
+        <div id="message-box">
+            <input id="username" autocomplete="off" placeholder="Username">
+            <input id="message" autocomplete="off" placeholder="Type your message here... ">
+            <input type="color" id="color-picker">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+        <script>
+            $(document).ready(function() {
+            var socket = io();
+ 
+            socket.on('message', function(data) {
+                var msg = data.timestamp + ' - <strong style="color:' + data.color + ';">' + data.username + '</strong>: ' + data.message;
+                $('#chat').append($('<li>').html(msg));
+            });
+ 
+            function sendMessage() {
+                var username = $('#username').val();
+                var color = $('#color-picker').val();
+                var message = $('#message').val();
+                if(username && message) {
+                    socket.send({username: username, message: message, color: color});
+                    $('#message').val('');
+                } else {
+                    alert("Both username and message are required.");
+                }
+            }
+ 
+            window.sendMessage = sendMessage;
+        });
+        </script>
+    </body>
+</html>
